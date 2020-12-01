@@ -16,7 +16,6 @@ for i in range(n_numbers):
     if found: break
 
 # Part 2
-found = False
 for i in range(n_numbers):
     for j in range(i + 1, n_numbers):
         if numbers[i] + numbers[j] >= 2020: continue
