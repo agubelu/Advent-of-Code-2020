@@ -4,20 +4,19 @@ import re
 password_strings = file_to_lines("input/day02.txt")
 REGEX_PWD = re.compile(r"""(\d+)-(\d+) ([a-z]): ([a-z]+)""")
 
-# Part 1
-def is_valid_pwd_1(pwd):
+# Parts 1 & 2
+correct_1 = correct_2 = 0
+for pwd in password_strings:
     m = REGEX_PWD.match(pwd)
     lower, upper, char, pwd_str = m.groups()
-    return pwd_str.count(char) in range(int(lower), int(upper) + 1)
+    lower = int(lower)
+    upper = int(upper)
 
-valid_pwds = list(filter(is_valid_pwd_1, password_strings))
-print("Part 1:", len(valid_pwds))
+    if pwd_str.count(char) in range(lower, upper + 1):
+        correct_1 += 1
 
-# Part 2
-def is_valid_pwd_2(pwd):
-    m = REGEX_PWD.match(pwd)
-    pos1, pos2, char, pwd_str = m.groups()
-    return (pwd_str[int(pos1) - 1] == char) != (pwd_str[int(pos2) - 1] == char)  # XOR
+    if (pwd_str[lower - 1] == char) != (pwd_str[upper - 1] == char):  # XOR
+        correct_2 += 1
 
-valid_pwds = list(filter(is_valid_pwd_2, password_strings))
-print("Part 2:", len(valid_pwds))
+print("Part 1:", correct_1)
+print("Part 2:", correct_2)
