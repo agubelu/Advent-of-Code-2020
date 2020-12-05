@@ -1,19 +1,13 @@
 from etc.utils import file_to_lines
 
 seats = file_to_lines("input/day05.txt")
-
-# Aux functions
-def bin_search(code, min_pos, max_pos):
-    mid = (max_pos + min_pos) // 2
-    if not code:
-        return mid
-    else:
-        new_min, new_max = (min_pos, mid) if code[0] in ("F", "L") else (mid, max_pos)
-        return bin_search(code[1:], new_min, new_max)
+#            "F" "0" "L" "0" "B" "1" "R" "1"
+trans_map = {70: 48, 76: 48, 66: 49, 82: 49}
 
 def get_seat_id(code):
-    row = bin_search(code[:7], 0, 128)
-    col = bin_search(code[7:], 0, 8)
+    bincode = code.translate(trans_map)
+    row = int(bincode[:7], 2)
+    col = int(bincode[7:], 2)
     return row * 8 + col
 
 # There's a much easier way to do this, but I wanna get to both answers in a single loop
