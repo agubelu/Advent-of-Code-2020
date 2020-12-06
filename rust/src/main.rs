@@ -1,7 +1,7 @@
 mod days;
 pub mod utils;
 
-use days::{day01, day05, day06};
+use days::{day01, day02, day05, day06};
 use std::env;
 
 fn main() {
@@ -16,6 +16,7 @@ fn main() {
 
     let func = match day {
         1 => day01::run,
+        2 => day02::run,
         5 => day05::run,
         6 => day06::run,
         _ => panic!("Not implemented."),
