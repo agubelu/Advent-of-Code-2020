@@ -8,6 +8,7 @@ use std::time::Instant;
 ///////////////////////////////////////////////////////////////////////////////
 
 const TARGET_SUM: usize = 2020;
+// target sum for day1 big boy is 99920044
 
 pub fn run() -> Result<(), Box<dyn Error>> {
     let time = Instant::now();
