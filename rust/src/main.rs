@@ -1,5 +1,4 @@
 mod days;
-pub mod utils;
 
 use days::{day01, day02, day03, day05, day06, day07, day08};
 use std::env;
