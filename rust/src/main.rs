@@ -27,7 +27,5 @@ fn main() {
         _ => panic!("Not implemented."),
     };
 
-    if let Err(error) = func() {
-        panic!("Fatal: {}", error);
-    }
+    func();
 }

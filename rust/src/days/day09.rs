@@ -1,5 +1,3 @@
-use std::boxed::Box;
-use std::error::Error;
 use std::io::{BufReader, BufRead};
 use std::fs::File;
 use std::time::Instant;
@@ -11,7 +9,7 @@ const BUFFER_SIZE: usize = 25;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-pub fn run() -> Result<(), Box<dyn Error>> {
+pub fn run() {
     let time = Instant::now();
 
     let f = BufReader::new(File::open("../input/day09.txt").unwrap());
@@ -25,7 +23,6 @@ pub fn run() -> Result<(), Box<dyn Error>> {
     println!("Part 1: {}", target);
     println!("Part 2: {}", min + max);
     println!("Elapsed: {:.3} ms", elapsed_ms);
-    Ok(())
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -1,15 +1,13 @@
-use std::boxed::Box;
-use std::error::Error;
 use std::io::{BufReader, BufRead};
-use std::fs;
+use std::fs::File;
 use std::time::Instant;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-pub fn run() -> Result<(), Box<dyn Error>> {
+pub fn run() {
     let time = Instant::now();
 
-    let f = BufReader::new(fs::File::open("../input/day02.txt").unwrap());
+    let f = BufReader::new(File::open("../input/day02.txt").unwrap());
     let mut sol_part_1 = 0;
     let mut sol_part_2 = 0;
    
@@ -66,5 +64,4 @@ pub fn run() -> Result<(), Box<dyn Error>> {
     println!("Part 1: {}", sol_part_1);
     println!("Part 2: {}", sol_part_2);
     println!("Elapsed: {:.3} ms", elapsed_ms);
-    Ok(())
 }

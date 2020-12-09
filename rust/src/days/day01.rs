@@ -1,8 +1,6 @@
-use std::boxed::Box;
-use std::error::Error;
 use std::io::{BufReader, BufRead};
 use std::collections::BTreeMap;
-use std::fs;
+use std::fs::File;
 use std::time::Instant;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -10,10 +8,10 @@ use std::time::Instant;
 const TARGET_SUM: usize = 2020;
 // target sum for day1 big boy is 99920044
 
-pub fn run() -> Result<(), Box<dyn Error>> {
+pub fn run() {
     let time = Instant::now();
 
-    let f = BufReader::new(fs::File::open("../input/day01.txt").unwrap());
+    let f = BufReader::new(File::open("../input/day01.txt").unwrap());
     let mut vec: Vec<usize> = vec![];
     let mut map: BTreeMap<usize, usize> = BTreeMap::new();
 
@@ -55,5 +53,4 @@ pub fn run() -> Result<(), Box<dyn Error>> {
     println!("Part 1: {}", sol_part_1);
     println!("Part 2: {}", sol_part_2);
     println!("Elapsed: {:.3} ms", elapsed_ms);
-    Ok(())
 }
