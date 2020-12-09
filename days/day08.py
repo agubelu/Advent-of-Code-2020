@@ -1,5 +1,4 @@
 from etc.utils import file_to_lines
-from etc.handheld_console import HandheldConsole
 import networkx as nx
 
 # Parsing
@@ -8,31 +7,68 @@ instructions = list(map(lambda l: (l[:3], int(l[4:])), lines))
 last_instr = len(instructions) - 1
 
 # Building the instruction flow graph
-graph = nx.Graph()
+graph = nx.DiGraph()
 for i, (instr, val) in enumerate(instructions):
     target = i + 1 if instr != "jmp" else i + val
-    graph.add_edge(i, target)
+    graph.add_edge(i, target, object=(instr, val))
+
+# Navigation function for part 1
+def nav_part_1(graph, initial=0):
+    cur_node = initial
+    cand_edges = []
+    visited_nodes = set()
+    acc = 0
+
+    while cur_node not in visited_nodes:
+        visited_nodes.add(cur_node)
+        _, target, edge_data = list(graph.out_edges(cur_node, data="object"))[0] # Each node has exactly 1 outgoing edge
+
+        if edge_data[0] == "acc":
+            acc += edge_data[1]
+        else:
+            cand_edges.append((cur_node, target, edge_data))
+
+        cur_node = target
+        
+    return acc, cand_edges
+
+# Navigation function for part 2
+def nav_part_2(graph, initial=0, objective=last_instr):
+    cur_node = initial
+    acc = 0
+
+    while True:
+        _, target, edge_data = list(graph.out_edges(cur_node, data="object", default=("nop", 0)))[0] # Each node has exactly 1 outgoing edge
+
+        if edge_data[0] == "acc":
+            acc += edge_data[1]
+
+        if cur_node == objective: break
+        cur_node = target
+        
+    return acc
 
 # Part 1
-cons = HandheldConsole(instructions)
-print("Part 1:", cons.run())
+sol_part_1, cand_edges = nav_part_1(graph)
+print("Part 1:", sol_part_1)
 
 # Part 2
-# This works under the assumption that the first and last instructions are in
-# different connected components in the instruction flow graph, which
-# is true for the example and my input.
-# If it's not true for yours then ¯\_(ツ)_/¯
-comp_start = nx.node_connected_component(graph, 0)
-comp_end = nx.node_connected_component(graph, last_instr)
+for source, target, (instr, val) in cand_edges:
+    # Remove the edge and add the opposite one
+    new_target = source + 1 if instr == "jmp" else source + val
+    if new_target < 0: continue
 
-for i in comp_start:
-    instr, val = instructions[i]
-    if instr == "acc": continue
-    alt_instr = "jmp" if instr == "nop" else "nop"
-    alt_target = i + 1 if alt_instr == "nop" else i + val
-    
-    if alt_target in comp_end:
-        # This is the instruction that we should change
-        instructions[i] = (alt_instr, val)
+    graph.remove_edge(source, target)
+    graph.add_edge(source, new_target)
 
-print("Part 2:", cons.run(yolo=True))
+    # Check for connectivity
+    if nx.has_path(graph, 0, last_instr):
+        break
+
+    # Undo the change
+    graph.remove_edge(source, new_target)
+    graph.add_edge(source, target)
+
+
+sol_part_2 = nav_part_2(graph)
+print("Part 2:", sol_part_2)
