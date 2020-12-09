@@ -1,9 +1,6 @@
 from etc.utils import file_to_lines
 from itertools import combinations
 
-from timeit import timeit
-
-t1 = timeit()
 BUFFER_SIZE = 25
 numbers = file_to_lines("input/day09.txt", int)
 n_numbers = len(numbers)
