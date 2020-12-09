@@ -1,6 +1,7 @@
 mod days;
 
-use days::{day01, day02, day03, day05, day06, day07, day08};
+use days::{day01, day02, day03, day04, day05,
+           day06, day07, day08};
 use std::env;
 
 fn main() {
@@ -17,6 +18,7 @@ fn main() {
         1 => day01::run,
         2 => day02::run,
         3 => day03::run,
+        4 => day04::run,
         5 => day05::run,
         6 => day06::run,
         7 => day07::run,
