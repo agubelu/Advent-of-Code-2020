@@ -13,8 +13,8 @@ for e1, e2 in zip(lines, lines[1:]):
 print("Part 1:", diffs[1] * diffs[3])
 
 # Part 2
-f = lambda i, j: 1 if j > i and lines[j] - lines[i] <= 3 else 0
-m = np.fromfunction(np.vectorize(f), (n_lines, n_lines), dtype=int)
+f = lambda i, j: j > i and lines[j] - lines[i] <= 3
+m = np.fromfunction(np.vectorize(f), (n_lines, n_lines), dtype=int).astype(int)
 aux = np.identity(n_lines)
 
 sol_part_2 = 0
