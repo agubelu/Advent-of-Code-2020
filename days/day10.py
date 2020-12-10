@@ -2,34 +2,29 @@ from etc.utils import file_to_lines
 import networkx as nx
 import numpy as np
 
-joltages = set(file_to_lines("input/day10.txt", func=int))
-initial = 0
-target = max(joltages) + 3
-nodes = {initial}.union(joltages)
-
-# Build the graph
-graph = nx.DiGraph()
-for node in nodes:
-    for k in range(node + 1, node + 4):
-        if k in nodes:
-            graph.add_edge(node, k)
-graph.add_edge(target - 3, target)
+lines = [0] + file_to_lines("input/day10.txt", func=int)
+n_lines = len(lines)
+lines.sort()
+target = lines[-1]
 
 # Part 1
-diffs = {}
-cur_node = initial
-while cur_node != target:
-    neighbors = list(graph.neighbors(cur_node))
-    next_node = min(neighbors)
-    diff = next_node - cur_node
-    diffs[diff] = diffs.get(diff, 0) + 1
-    cur_node = next_node
+diffs = {1: 0, 2: 0, 3: 1}
+for i in range(1, n_lines):
+    diff = lines[i] - lines[i - 1]
+    diffs[diff] += 1
 
 print("Part 1:", diffs[1] * diffs[3])
 
 # Part 2
+graph = nx.DiGraph()
+for i in range(n_lines):
+    node = lines[i]
+    for other in lines[i + 1:i + 4]:
+        if other - node > 3: break
+        graph.add_edge(node, other)
+
 adj_matrix = nx.to_numpy_matrix(graph)
-start_pow = len(nx.shortest_path(graph, initial, target)) - 1
+start_pow = len(nx.shortest_path(graph, 0, target)) - 1
 last_elem = adj_matrix.shape[0] - 1
 
 aux_mat = np.linalg.matrix_power(adj_matrix, start_pow)
