@@ -21,12 +21,12 @@ def process_input(lines):
                 coords_map[x, y] = inserted
                 inserted += 1
 
-    adj1 = {i: find_adj_1(coords, i, coords_map) for coords, i in coords_map.items()}
-    adj2 = {i: find_adj_2(coords, i, coords_map) for coords, i in coords_map.items()}
+    adj1 = {i: find_adj_1(coords, coords_map) for coords, i in coords_map.items()}
+    adj2 = {i: find_adj_2(coords, coords_map) for coords, i in coords_map.items()}
 
     return ls, adj1, adj2
 
-def find_adj_1(coords, i, coords_map):
+def find_adj_1(coords, coords_map):
     res = []
     for dx, dy in DIRS:
         x = coords[0] + dx
@@ -36,7 +36,7 @@ def find_adj_1(coords, i, coords_map):
             res.append(coords_map[x, y])
     return res
 
-def find_adj_2(coords, i, coords_map):
+def find_adj_2(coords, coords_map):
     res = []
     for dx, dy in DIRS:
         x = coords[0] + dx
