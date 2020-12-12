@@ -14,12 +14,8 @@ print("Part 1:", diffs[1] * diffs[3])
 
 # Part 2
 f = lambda i, j: j > i and lines[j] - lines[i] <= 3
-m = np.fromfunction(np.vectorize(f), (n_lines, n_lines), dtype=int).astype(int)
-aux = np.identity(n_lines)
+mat = np.fromfunction(np.vectorize(f), (n_lines, n_lines), dtype=np.int64).astype(np.int64)
+mat[n_lines - 1, n_lines - 1] = 1
+mat = np.linalg.matrix_power(mat, n_lines)
 
-sol_part_2 = 0
-for _ in range(n_lines):
-    aux = aux @ m
-    sol_part_2 += aux[0, n_lines - 1]
-
-print("Part 2:", int(sol_part_2))
+print("Part 2:", mat[0, n_lines - 1])
