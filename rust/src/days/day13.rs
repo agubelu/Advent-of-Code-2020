@@ -23,8 +23,8 @@ pub fn run() {
     }
 
     let rems: Vec<i64> = izip!(&indices, &buses)
-    .map(|(i, bus)| (bus - i).rem_euclid(*bus))
-    .collect();
+                              .map(|(i, bus)| (bus - i).rem_euclid(*bus))
+                              .collect();
     
     let sol_part_1 = min_wait.0 * min_wait.1;
     let sol_part_2 = chinese_rem_theorem(&rems, &buses);
@@ -55,12 +55,9 @@ fn process_input(f: BufReader<File>) -> (i64, Vec<i64>, Vec<i64>) {
     let mut indices = Vec::with_capacity(n_elems);
 
     for (i, elem) in spl.iter().enumerate() {
-        match *elem {
-            "x" => continue,
-            val => {
-                indices.push(i as i64);
-                buses.push(val.parse().unwrap());
-            },
+        if *elem != "x" {
+            indices.push(i as i64);
+            buses.push(elem.parse().unwrap());
         }
     }
 
