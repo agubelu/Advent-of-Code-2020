@@ -72,9 +72,7 @@ fn get_alt_addrs(addr: u64, floating: u64) -> Vec<u64> {
         let mut pos = 0;
 
         while float_bits != 0 {
-            let b = float_bits & 1;
-            
-            if b != 0 {
+            if float_bits & 1 != 0 {
                 if k & 1 == 1 {
                     mask_ones |= 1 << pos;
                 } else {
