@@ -12,11 +12,11 @@ lines = file_to_lines("input/day14.txt")
 num2bin = lambda n: bin(n)[2:].zfill(ADDR_SIZE)
 bin2num = lambda b: int(b, 2)
 
-def apply_mask_v1(s, mask):
-    return "".join(s[i] if mask[i] == "X" else mask[i] for i in range(len(mask)))
+def apply_mask_v1(val, mask):
+    return "".join(v if m == "X" else m for v, m in zip(val, mask))
 
-def apply_mask_v2(s, mask):
-    masked = "".join(mask[i] if mask[i] != "0" else s[i] for i in range(len(mask)))
+def apply_mask_v2(val, mask):
+    masked = "".join(m if m != "0" else v for v, m in zip(val, mask))
     n_vars = masked.count("X")
     masked = masked.replace("X", "{}")
     return [masked.format(*x) for x in product("01", repeat=n_vars)]
