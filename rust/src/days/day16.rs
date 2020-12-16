@@ -4,7 +4,6 @@ use std::time::Instant;
 use std::ops::RangeInclusive;
 
 use regex::Regex;
-use rayon::prelude::*;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -40,9 +39,11 @@ pub fn run() {
     let f = BufReader::new(File::open("../input/day16.txt").unwrap());
 
     let (fields, my_ticket, tickets) = process_input(f);
-
     let (valid_tickets, sol_part_1) = filter_tickets(tickets, &fields);
-    let sol_part_2 = 2;
+
+    let possible_fields: Vec<Vec<u64>> = valid_tickets.iter().map(|t| ticket_to_fields(&t, &fields)).collect();
+    let field_mapping = disambiguate_fields(possible_fields);
+    let sol_part_2 = get_sol_2(&fields, &field_mapping, &my_ticket);
     
     let elapsed_ms = time.elapsed().as_nanos() as f64 / 1_000_000.0;
     println!("Part 1: {}", sol_part_1);
@@ -51,6 +52,68 @@ pub fn run() {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+fn get_sol_2(fields: &Vec<Field>, mapping: &Vec<u64>, my_ticket: &Ticket) -> u64 {
+    my_ticket.vals.iter()
+        .enumerate()
+        .filter(|(i, _)| {
+            let ind = mapping[*i].trailing_zeros() as usize;
+            fields[ind].name.starts_with("departure")
+        })
+        .fold(1, |a, (_, b)| a * *b as u64)
+}
+
+fn disambiguate_fields(fs: Vec<Vec<u64>>) -> Vec<u64> {
+    let n_tickets = fs.len();
+    let n_fields = fs[0].len();
+    let mut res = Vec::new();
+
+    for i in 0..n_fields {
+        let mut f = fs[0][i];
+        for j in 1..n_tickets {
+            f &= fs[j][i];
+        }
+        res.push(f);
+    }
+
+    loop {
+        let mut changed = false;
+
+        for i in 0..n_fields {
+            let val = res[i];
+            if val.count_ones() == 1 {
+                for j in 0..n_fields {
+                    if i != j && res[j].count_ones() > 1 {
+                        res[j] &= !val;
+                        changed = true;
+                    }
+                }
+            }
+        }
+
+        if !changed {
+            break;
+        }
+    }
+
+    return res;
+}
+
+fn ticket_to_fields(ticket: &Ticket, fields: &Vec<Field>) -> Vec<u64> {
+    let n_fields = fields.len();
+    ticket.vals.iter()
+        .map(|val| {
+            let mut f = 0;
+            for i in 0..n_fields {
+                if fields[i].accepts_value(*val) {
+                    f |= 1 << i;
+                }
+            }
+            
+            return f;
+        })
+        .collect()
+}
 
 fn filter_tickets(tickets: Vec<Ticket>, fields: &Vec<Field>) -> (Vec<Ticket>, IntType) {
     let mut sol_part_1 = 0;
