@@ -1,41 +1,27 @@
 from etc.utils import file_to_lines
 from itertools import product, chain
+from collections import Counter
 
 lines = file_to_lines("input/day17.txt")
 
 def solve_for_dim(n_dims):
-    DIFFS = list(product((1, 0, -1), repeat=n_dims))
+    diffs = list(product((1, 0, -1), repeat=n_dims))
+    diffs.remove((0,) * n_dims)
 
-    cur_state = {}
+    cur_state = set()
 
     for y, line in enumerate(lines):
         for x, val in enumerate(line):
             if val == "#":
-                cur_state[(x, y) + (0,) * (n_dims - 2)] = 1
+                cur_state.add((x, y) + (0,) * (n_dims - 2))
     
-    get_neighbors = lambda pos: [tuple([pos[i] + diff[i] for i in range(n_dims)]) for diff in DIFFS]
-    count_nearby = lambda pos, state: sum(state.get(neigh, 0) for neigh in get_neighbors(pos) if neigh != pos)
-
-    def get_next(pos, state):
-        current = state.get(pos, 0)
-        count = count_nearby(pos, state)
-
-        if current == 1 and count not in (2, 3):
-            return 0
-        elif current == 0 and count == 3:
-            return 1
-        else:
-            return current
+    get_neighbors = lambda pos: [tuple([pos[i] + diff[i] for i in range(n_dims)]) for diff in diffs]
 
     for i in range(6):
-        next_state = {}
-        pos_analyze = set(chain.from_iterable(get_neighbors(pos) for pos in cur_state))
-        for pos in pos_analyze:
-            next_val = get_next(pos, cur_state)
-            if next_val:
-                next_state[pos] = next_val
-
-        cur_state = next_state
+        counter = Counter(chain.from_iterable(get_neighbors(pos) for pos in cur_state))
+        stay_on = set(x for x in cur_state if counter[x] in (2, 3))
+        become_on = set(x for x, cnt in counter.items() if cnt == 3 and x not in cur_state)
+        cur_state = stay_on.union(become_on)
 
     return len(cur_state)
 
