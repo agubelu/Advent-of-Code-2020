@@ -8,7 +8,7 @@ lines = file_to_lines("input/day21.txt")
 def line_to_recipe(line):
     spl = line.split(" (")
     ingrs = spl[0].split(" ")
-    allergs = spl[1] if len(spl) == 2 else()
+    allergs = spl[1] if len(spl) == 2 else []
     
     if allergs:
         allergs = allergs[9:-1].split(", ")
@@ -35,10 +35,12 @@ while any(x is None for x in identified_allergens.values()):
         if len(ingrs) == 1:
             identified_allergens[allergen] = ingrs.pop()
 
+# Part 1
 safe_ingredients = all_ingredients - set(identified_allergens.values())
 sol_part_1 = sum(sum(int(ingr in r.ingredients) for ingr in safe_ingredients) for r in recipes)
 print("Part 1:", sol_part_1)
 
+# Part 2
 ls = list(identified_allergens.items())
 ls.sort(key=lambda x: x[0])
 sol_part_2 = ",".join(x[1] for x in ls)
