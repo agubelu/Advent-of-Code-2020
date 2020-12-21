@@ -1,5 +1,5 @@
 from etc.utils import file_to_lines
-from etc.d18_parse import Val
+from etc.d18 import Val
 import re
 
 repl = lambda line: re.sub(r"(\d+)", r"Val(\1)", line)
