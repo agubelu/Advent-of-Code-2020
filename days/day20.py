@@ -14,22 +14,22 @@ tile_mods = list(product((False, True), (False, True), (0, 1, 2, 3)))
 
 # Find the pieces that belong to the corners (Part 1), and also use one of those
 # as the starting point for the backtracking algorithm
-
 def get_borders_with_matches(tile, ls):
     other_tiles = [t for t in ls if t.tile_id != tile.tile_id]
     borders = tile.get_borders()
-    res = tuple()
+    res = {"borders": (), "tiles": [], "orig": tile}
 
     for i, border in enumerate(borders):
         for other_tile in other_tiles:
             if any(border == ob for ob in other_tile.get_borders_and_invs()):
-                res += (i,)
+                res["borders"] += (i,)
+                res["tiles"] += [other_tile]
 
     return res
 
-corners = [(t, get_borders_with_matches(t, tiles)) for t in tiles]
-corners = list(filter(lambda x: len(x[1]) == 2, corners))
-sol_part_1 = prod(t[0].tile_id for t in corners)
+adj_info = {t.tile_id: get_borders_with_matches(t, tiles) for t in tiles}
+corners = list(filter(lambda x: len(x[1]["borders"]) == 2, adj_info.items()))
+sol_part_1 = prod(x[0] for x in corners)
 print("Part 1:", sol_part_1)
 
 # Now, grab one of the corners and rotate it so that the borders that
@@ -39,17 +39,18 @@ corner_data = corners[0]
 
 # I'm 90% sure this has to match one of these 4 options
 starting_tile = {
-    (0, 1): corner_data[0].transform(False, False, 1),
-    (0, 3): corner_data[0].transform(False, False, 2),
-    (1, 2): corner_data[0],
-    (2, 3): corner_data[0].transform(False, False, 3),
-}[corner_data[1]]
+    (0, 1): corner_data[1]["orig"].transform(False, False, 1),
+    (0, 3): corner_data[1]["orig"].transform(False, False, 2),
+    (1, 2): corner_data[1]["orig"],
+    (2, 3): corner_data[1]["orig"].transform(False, False, 3),
+}[corner_data[1]["borders"]]
 
 def find_placements(current_tiles, used_tiles, i):
-    available_tiles = [tile for tile in tiles if tile.tile_id not in used_tiles]
-
-    if not available_tiles:
+    if i == n_tiles:
         return current_tiles
+
+    last_tile_id = used_tiles[-1] if i % square_side != 0 else used_tiles[-square_side]
+    available_tiles = [tile for tile in adj_info[last_tile_id]["tiles"] if tile.tile_id not in used_tiles]
 
     for tile in available_tiles:
         for mod in tile_mods:
@@ -81,29 +82,16 @@ big_tile = Tile(0, big_tile_content)
 pic_width = len(big_tile.content[0])
 
 # This regex matches a monster when the picture is flattened into a single line
-wrap = pic_width - 18
-re_monster = re.compile(r"#.{%d}#(.{4}##){3}#.{%d}(#.{2}){6}" % (wrap - 1, wrap - 1))
-
-# Positions in which a # belongs to a monster relative to the start of
-# the monster in the flattened matrix
-monster_pos_offset = (0, wrap, 5, 1, 5, 1, 5, 1, 1, wrap, 3, 3, 3, 3, 3)
-sol_part_2 = None
+wrap = pic_width - 19
+re_monster = re.compile(r"#.{%d}#(.{4}##){3}#.{%d}(#.{2}){6}" % (wrap, wrap))
 
 # Let's go monster hunting
 for mod in tile_mods:
     flat = big_tile.transform(*mod).flatten()
     monsters = list(re_monster.finditer(flat, overlapped=True))
+    n_monsters = len(monsters)
 
+    # Allow up to one match by mere chance (it doesn't happen for my input, but just in case)
     if len(monsters) > 1:
-        # Allow up to one match by mere chance (it doesn't happen for my input, but just in case)
-        monster_positions = set()
-
-        for match in monsters:
-            start_pos = match.start()
-            for i in range(1, len(monster_pos_offset) + 1):
-                monster_positions.add(start_pos + sum(monster_pos_offset[:i]))
-        
-        sol_part_2 = flat.count("#") - len(monster_positions)
+        print("Part 2:", flat.count("#") - 15 * n_monsters)
         break
-
-print("Part 2:", sol_part_2)
