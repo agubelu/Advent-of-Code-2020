@@ -1,3 +1,7 @@
+from collections import namedtuple
+
+GameResult = namedtuple("GameResult", "winner, score")
+
 class Deck:
     def from_lines(lines):
         return Deck([int(x) for x in lines])
@@ -42,7 +46,7 @@ class Combat:
                 # If it has, player 1 wins
                 cur_hash = hash(self)
                 if cur_hash in self.previous_states:
-                    return (1, None)
+                    return GameResult(1, None)
                 else:
                     self.previous_states.add(cur_hash)
 
@@ -50,7 +54,7 @@ class Combat:
 
         winner = 1 if self.deck_1 else 2
         score = self._get_score(winner)
-        return winner, score
+        return GameResult(winner, score)
 
     def _play_round(self):
         card1 = self.deck_1.draw()
@@ -59,7 +63,7 @@ class Combat:
         if self.recursive and len(self.deck_1) >= card1 and len(self.deck_2) >= card2:
             new_deck_1 = Deck(self.deck_1[:card1])
             new_deck_2 = Deck(self.deck_2[:card2])
-            winner, _ = Combat(new_deck_1, new_deck_2, recursive=True).play_game()
+            winner = Combat(new_deck_1, new_deck_2, recursive=True).play_game().winner
         else:
             winner = 1 if card1 > card2 else 2
             
