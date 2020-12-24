@@ -4,7 +4,7 @@ use days::{day01, day02, day03, day04, day05,
            day06, day07, day08, day09, day10,
            day11, day12, day13, day14, day15,
            day16, day17,
-                  day22, day23};
+                  day22, day23, day24};
 use std::env;
 
 fn main() {
@@ -35,8 +35,13 @@ fn main() {
         15 => day15::run,
         16 => day16::run,
         17 => day17::run,
+
+
+
+
         22 => day22::run,
         23 => day23::run,
+        24 => day24::run,
          _ => panic!("Not implemented."),
     };
 
