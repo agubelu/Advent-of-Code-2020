@@ -14,38 +14,42 @@ fn main() {
         panic!("Please provide the day to run as a command-line argument.");
     }
 
-    let day: i32 = args[1].parse().unwrap_or_else(|_| {
-        panic!("Not a valid day!");
-    });
+    let days: Vec<u8> = args.iter()
+        .skip(1)
+        .map(|x| x.parse().unwrap_or_else(|v| panic!("Not a valid day: {}", v)))
+        .collect();
 
-    let func = match day {
-        01 => day01::run,
-        02 => day02::run,
-        03 => day03::run,
-        04 => day04::run,
-        05 => day05::run,
-        06 => day06::run,
-        07 => day07::run,
-        08 => day08::run,
-        09 => day09::run,
-        10 => day10::run,
-        11 => day11::run,
-        12 => day12::run,
-        13 => day13::run,
-        14 => day14::run,
-        15 => day15::run,
-        16 => day16::run,
-        17 => day17::run,
-        18 => day18::run,
+    for day in days {
+        let func = match day {
+            01 => day01::run,
+            02 => day02::run,
+            03 => day03::run,
+            04 => day04::run,
+            05 => day05::run,
+            06 => day06::run,
+            07 => day07::run,
+            08 => day08::run,
+            09 => day09::run,
+            10 => day10::run,
+            11 => day11::run,
+            12 => day12::run,
+            13 => day13::run,
+            14 => day14::run,
+            15 => day15::run,
+            16 => day16::run,
+            17 => day17::run,
+            18 => day18::run,
 
 
 
-        22 => day22::run,
-        23 => day23::run,
-        24 => day24::run,
-        25 => day25::run,
-         _ => panic!("Not implemented."),
-    };
+            22 => day22::run,
+            23 => day23::run,
+            24 => day24::run,
+            25 => day25::run,
+            _ => panic!("Not implemented."),
+        };
 
-    func();
+        println!("\n=== Day {:02} ===", day);
+        func();
+    }
 }
