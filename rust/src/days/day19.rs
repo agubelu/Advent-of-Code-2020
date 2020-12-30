@@ -23,13 +23,13 @@ pub fn run() {
     let f = BufReader::new(File::open("../input/day19.txt").unwrap());
     let (rules, lines) = read_input(f);
 
-    let re_text_part_1 = format!("^{}$", rules[&0].to_regex(&rules));
+    let r42 = rules[&42].to_regex(&rules);
+    let r31 = rules[&31].to_regex(&rules);
+    let re_text_part_1 = format!("^{}{}{}$", r42, r42, r31);
     let re_part_1 = Regex::new(&re_text_part_1).unwrap();
     let sol_part_1 = lines.iter().filter(|line| re_part_1.is_match(line)).count();
 
     // Somewhat ad-hoc stuff, especially for the change in rule 11
-    let r42 = rules[&42].to_regex(&rules);
-    let r31 = rules[&31].to_regex(&rules);
     let r11 = format!("({}{}|{}{}{}{}|{}{}{}{}{}{}|{}{}{}{}{}{}{}{})", 
                         r42, r31, 
                         r42, r42, r31, r31,
