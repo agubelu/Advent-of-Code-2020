@@ -227,7 +227,7 @@ fn get_matches_info(tiles: &TileMap) -> MatchMap {
 fn read_tiles() -> TileMap {
     let data = read_to_string("../input/day20.txt").expect("Error reading file");
 
-    data.split("\n\n").map(|tile_data| {
+    data.replace("\r", "").split("\n\n").map(|tile_data| {
         let tile_lines: Vec<&str> = tile_data.split("\n").collect();
         let len_0 = tile_lines[0].len();
         let mat_size = tile_lines[1].len();
