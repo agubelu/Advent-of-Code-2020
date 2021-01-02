@@ -1,39 +1,61 @@
 use std::ops::{Index, IndexMut};
 
-pub struct Mat<T> {
+pub type MatPosition = (usize, usize);
+pub struct MatNum<T> {
     width: usize,
     height: usize,
     content: Vec<T>,
 }
 
-impl<T: Clone> Mat<T> {
-    fn new(width: usize, height: usize, default_val: Option<T>) -> Self {
-        let cont = match default_val {
-            None => Vec::with_capacity(width * height),
-            Some(val) => vec![val; width * height],
-        };
-        return Mat::<T>{width, height, content: cont};
+impl<T: Copy> MatNum<T> {
+    pub fn new(width: usize, height: usize, default: T) -> Self {
+        let cont = vec![default; width * height];
+        MatNum::<T>{width, height, content: cont}
     }
 
-    fn get(&self, x: usize, y: usize) -> Option<&T> {
-        return self.content.get(y * self.height + x);
+    pub fn from_content(width: usize, height: usize, content: Vec<T>) -> Self {
+        MatNum::<T>{width, height, content}
     }
 
-    fn set(&mut self, x: usize, y: usize, val: T) {
-        self.content[y * self.height + x] = val;
+    pub fn get(&self, x: usize, y: usize) -> T {
+        // No bounds check because yolo
+        self.content[y * self.height + x]
+    }
+
+    pub fn set(&mut self, x: usize, y: usize, val: T) {
+        self.content[y * self.height + x] = val
+    }
+
+    pub fn flat(&self) -> &[T] {
+        &self.content
+    }
+
+    pub fn width(&self) -> usize {
+        self.width
+    }
+
+    pub fn height(&self) -> usize {
+        self.height
     }
 }
 
-impl<T: Clone> Index<(usize, usize)> for Mat<T> {
+impl<T: Copy> Clone for MatNum<T> {
+    fn clone(&self) -> Self {
+        let cont = self.content.clone();
+        MatNum::from_content(self.width(), self.height(), cont)
+    }
+}
+
+impl<T: Copy> Index<MatPosition> for MatNum<T> {
     type Output = T;
-
-    fn index(&self, pos: (usize, usize)) -> &Self::Output {
-        return self.get(pos.0, pos.1).unwrap();
+    
+    fn index(&self, pos: MatPosition) -> &Self::Output {
+        &self.content[pos.1 * self.height + pos.0]
     }
 }
 
-impl<T: Clone> IndexMut<(usize, usize)> for Mat<T> {
-    fn index_mut(&mut self, pos: (usize, usize)) -> &mut Self::Output {
-        return self.content.get_mut(pos.1 * self.height + pos.0).unwrap();
+impl<T: Copy> IndexMut<MatPosition> for MatNum<T> {
+    fn index_mut(&mut self, pos: MatPosition) -> &mut Self::Output {
+        &mut self.content[pos.1 * self.height + pos.0]
     }
 }
