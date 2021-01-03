@@ -27,7 +27,7 @@ impl Tile {
         Tile {
             tile_id,
             side: mat.width(),
-            mat: mat,
+            mat,
         }
     }
 

@@ -32,7 +32,7 @@ pub fn run() {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-fn get_sol(lines: &Vec<String>, priorities: &HashMap<ExprToken, u8>) -> u64 {
+fn get_sol(lines: &[String], priorities: &HashMap<ExprToken, u8>) -> u64 {
     return lines.iter()
                 .map(|line| line_to_expr(line, &priorities))
                 .map(|expr| eval_expr(&expr))

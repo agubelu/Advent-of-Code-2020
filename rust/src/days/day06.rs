@@ -18,7 +18,7 @@ pub fn run() {
     for line in f.lines() {
         let line = line.unwrap();
 
-        if line == "" {
+        if line.is_empty() {
             sol_part_1 += answers_or.count_ones();
             sol_part_2 += answers_and.count_ones();
 
@@ -30,7 +30,7 @@ pub fn run() {
 
         let mut answers: u32 = 0;
         for ch in line.chars() {
-            answers |= 1 << (ch as u8);
+            answers |= 1 << (ch as u8 - b'a');
         }
 
         if answers_or == 0 {

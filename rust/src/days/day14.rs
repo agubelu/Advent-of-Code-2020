@@ -31,7 +31,7 @@ pub fn run() {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-fn get_sols(ls: &Vec<Instr>) -> (u64, u64) {
+fn get_sols(ls: &[Instr]) -> (u64, u64) {
     let mut memory1 = HashMap::new();
     let mut memory2 = HashMap::new();
 
@@ -64,7 +64,7 @@ fn get_sols(ls: &Vec<Instr>) -> (u64, u64) {
 fn get_alt_addrs(addr: u64, floating: u64) -> Vec<u64> {
     let mut res = Vec::new();
 
-    for i in 0..(2 as u64).pow(floating.count_ones()) {
+    for i in 0..2_u64.pow(floating.count_ones()) {
         let mut k = i;
         let mut mask_ones = 0;
         let mut mask_zeros = u64::MAX;
@@ -131,7 +131,7 @@ fn get_mem(chars: &mut Chars) -> Instr {
     // Skip 3
     for _ in 0..3 { chars.next(); }
 
-    while let Some(ch) = chars.next() {
+    for ch in chars {
         let x = ch.to_digit(10).unwrap() as u64;
         val = val * 10 + x;
     }
@@ -145,7 +145,7 @@ fn get_mask(chars: &mut Chars) -> Instr {
     let mut floating: u64 = 0;
     let mut pos = 36;
 
-    while let Some(ch) = chars.next() {
+    for ch in chars {
         pos -= 1;
         match ch {
             'X' => floating |= 1 << pos,

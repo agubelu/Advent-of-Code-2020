@@ -39,7 +39,7 @@ pub fn run() {
 
 // Geting both solutions at once is slightly more efficient, especially
 // for the big boy input
-fn get_sols(instructions: &Vec<Instr>) -> (i64, i64) {
+fn get_sols(instructions: &[Instr]) -> (i64, i64) {
     let mut heading = 1;
     let mut pos_x_1 = 0;
     let mut pos_y_1 = 0;

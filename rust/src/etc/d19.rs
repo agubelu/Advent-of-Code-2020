@@ -30,7 +30,7 @@ impl Rule {
         }
     }
 
-    fn create_combo_re(combo: &RuleCombo, map: &HashMap<RuleIndex, Rule>) -> String {
+    fn create_combo_re(combo: &[RuleIndex], map: &HashMap<RuleIndex, Rule>) -> String {
         return combo.iter().map(|i| map[i].to_regex(&map)).collect::<Vec<_>>().join("");
     }
 }

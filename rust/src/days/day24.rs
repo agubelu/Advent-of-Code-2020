@@ -46,7 +46,7 @@ pub fn run() {
                                                        None => false,
                                                        Some(v) => *v <= 2,
                                                    })
-                                                   .map(|k| *k)
+                                                   .copied()
                                                    .collect();
 
         let flip_black: CoordsSet = adj_count.iter()

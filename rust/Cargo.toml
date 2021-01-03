@@ -6,11 +6,11 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-petgraph = "0.5.1"
-regex = "1.4.2"
-rayon = "1.5.0"
+bit_reverse = "0.1.8"
+counter = "0.5.2"
 itertools = "0.9.0"
 modinverse = "0.1.0"
-counter = "0.5.2"
+petgraph = "0.5.1"
+rayon = "1.5.0"
+regex = "1.4.2"
 rustc-hash = "1.1.0"
-bit_reverse = "0.1.8"

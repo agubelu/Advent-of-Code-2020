@@ -26,7 +26,7 @@ pub fn run() {
 
     let bad_ingredients: FxHashSet<&str> = identified_allergens.values().copied().collect();
     let sol_part_1: usize = recipes.iter()
-                                   .map(|rec| rec.ingredients.difference(&bad_ingredients).collect::<Vec<_>>().len())
+                                   .map(|rec| rec.ingredients.difference(&bad_ingredients).count())
                                    .sum();
 
     let mut ingr_list = identified_allergens.iter().collect::<Vec<_>>();
@@ -64,7 +64,7 @@ fn identify_allergens<'a>(common_ingrs: &'a AllergenSetMap) -> AllergenMap<'a> {
     return res;
 }
 
-fn get_common_ingredients_allergens<'a>(recipes: &'a Vec<Recipe>) -> AllergenSetMap<'a> {
+fn get_common_ingredients_allergens<'a>(recipes: &'a[Recipe]) -> AllergenSetMap<'a> {
     let mut map: AllergenSetMap<'a> = FxHashMap::default();
 
     for recipe in recipes {
@@ -81,10 +81,10 @@ fn get_common_ingredients_allergens<'a>(recipes: &'a Vec<Recipe>) -> AllergenSet
     return map;
 }
 
-fn read_data(data: &String) -> Vec<Recipe> {
+fn read_data(data: &str) -> Vec<Recipe> {
     data.lines().map(|line| {
         let spl = line.split("(contains ").collect::<Vec<_>>();
-        let ingredients = spl[0].trim().split(" ").collect();
+        let ingredients = spl[0].trim().split(' ').collect();
 
         let allergens = if spl.len() == 1 {
             FxHashSet::default()

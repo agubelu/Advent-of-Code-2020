@@ -40,9 +40,9 @@ fn get_sol(state: &HashSet<CubeCoords>, n_dims: usize) -> usize {
         let mut stay_on: HashSet<CubeCoords> = state.iter()
                                                 .filter(|cube| {
                                                     let cnt = counter[cube];
-                                                    cnt >= 2 && cnt <= 3
+                                                    (2..=3).contains(&cnt)
                                                 })
-                                                .map(|x| *x)
+                                                .copied()
                                                 .collect();
         let become_on = counter.iter()
                                .filter(|(coords, cnt)| **cnt == 3 && !state.contains(coords))

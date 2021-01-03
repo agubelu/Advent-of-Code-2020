@@ -9,6 +9,7 @@ use petgraph::algo::has_path_connecting;
 
 ///////////////////////////////////////////////////////////////////////////////
 
+type EdgeInfo = (EdgeIndex, NodeIndex<u32>, NodeIndex<u32>, NodeIndex<u32>);
 #[derive(Clone)]
 enum InstrType {
     Add { val: i32 },
@@ -57,7 +58,7 @@ fn navigate_until_loop(
     source: NodeIndex,
     n_instructions: usize
 ) 
-    -> (i32, Vec<(EdgeIndex, NodeIndex<u32>, NodeIndex<u32>, NodeIndex<u32>)>) 
+    -> (i32, Vec<EdgeInfo>) 
 {
     let mut cur_node = source;
     let mut visited_nodes: HashSet<NodeIndex> = HashSet::new();
@@ -92,10 +93,9 @@ fn navigate_yolo(graph: &DiGraph<u32, InstrType>, source: NodeIndex, target: Nod
 
     loop {
         let out_edge = graph.edges(cur_node).next().unwrap(); // Each node has exactly 1 outgoing edge
-        match out_edge.weight() {
-            InstrType::Add{val} => acc += val,
-            _ => ()
-        };
+        if let InstrType::Add{val} = out_edge.weight() {
+            acc += val;
+        }
 
         if cur_node == target {
             break;
@@ -117,7 +117,7 @@ fn get_flow_graph(f: BufReader<File>) -> (DiGraph<u32, InstrType>, usize) {
             let val: i32 = line[4..].parse().unwrap();
             let (instr, target) = match &line[..3] {
                 "nop" => (InstrType::Nop{val}, i + 1),
-                "jmp" => (InstrType::Jmp{val}, i + val as usize),
+                "jmp" => (InstrType::Jmp{val}, (i as i32 + val) as usize),
                 "acc" => (InstrType::Add{val}, i + 1),
                 _ => panic!("bruh")
             };

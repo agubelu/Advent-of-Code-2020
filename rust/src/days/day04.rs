@@ -36,7 +36,7 @@ pub fn run() {
 
     for line in f.lines() {
         let line = line.unwrap();
-        if line == "" {
+        if line.is_empty() {
             if acc1 == 7 { sol_part_1 += 1; }
             if acc2 == 7 { sol_part_2 += 1; }
             acc1 = 0;

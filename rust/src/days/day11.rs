@@ -5,6 +5,9 @@ use std::collections::HashMap;
 
 use rayon::prelude::*;
 
+///////////////////////////////////////////////////////////////////////////////
+
+type NeighborMap = HashMap<usize, Vec<usize>>;
 const DIRS: [(isize, isize); 8] = [(-1, -1), (0, -1), (1, -1),
                                    (-1,  0),          (1,  0),
                                    (-1,  1), (0,  1), (1,  1)];
@@ -114,9 +117,7 @@ fn find_adj_2(
     return res;
 }
 
-fn process_lines(lines: &Vec<String>, max_x: usize, max_y: usize)
- -> 
-(Vec<usize>, HashMap<usize, Vec<usize>>, HashMap<usize, Vec<usize>>) {
+fn process_lines(lines: &[String], max_x: usize, max_y: usize) -> (Vec<usize>, NeighborMap, NeighborMap) {
     let mut inserted = 0;
     let cap = max_x * max_y;
     let mut coords = HashMap::with_capacity(cap);

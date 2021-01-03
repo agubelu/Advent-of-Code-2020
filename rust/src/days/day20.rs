@@ -6,9 +6,9 @@ use rustc_hash::FxHashMap;
 use crate::etc::d20::{Tile, BorderInfo, FullBorderInfo, Transformation, Rotation::*};
 use crate::etc::utils::MatNum;
 
+
 ///////////////////////////////////////////////////////////////////////////////
 
-type TileVec = Vec<Tile>;
 type TileMap = FxHashMap<usize, Tile>;
 
 type MatchLocations = [bool; 4];  // Top, right, bottom, left
@@ -33,7 +33,7 @@ pub fn run() {
                                                        .filter(|(_, m_info)| m_info.tiles.len() == 2)
                                                        .collect();
 
-    let sol_part_1 = corners.iter().map(|(id, _)| *id).fold(1, |a, b| a * b);
+    let sol_part_1: usize = corners.iter().map(|(id, _)| *id).product();
     
     // Grab one corner and rotate it, so that the matching borders are on the right and bottom
     let initial_border = get_initial_border(corners[0], &tiles);
@@ -82,7 +82,7 @@ fn find_spots_not_monster(mut tile: Tile) -> usize {
     }
 }
 
-fn make_big_tile(tiles: &TileVec, square_side: usize) -> Tile {
+fn make_big_tile(tiles: &[Tile], square_side: usize) -> Tile {
     let trimmed_side = tiles[0].side() - 2;
     let big_tile_side = (trimmed_side) * square_side;
     let mut big_mat = MatNum::new(big_tile_side, big_tile_side, 0);
@@ -227,8 +227,8 @@ fn get_matches_info(tiles: &TileMap) -> MatchMap {
 fn read_tiles() -> TileMap {
     let data = read_to_string("../input/day20.txt").expect("Error reading file");
 
-    data.replace("\r", "").split("\n\n").map(|tile_data| {
-        let tile_lines: Vec<&str> = tile_data.split("\n").collect();
+    data.replace('\r', "").split("\n\n").map(|tile_data| {
+        let tile_lines: Vec<&str> = tile_data.split('\n').collect();
         let len_0 = tile_lines[0].len();
         let mat_size = tile_lines[1].len();
 

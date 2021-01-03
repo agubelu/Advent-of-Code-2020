@@ -54,7 +54,7 @@ fn compute_part_2(graph: &DiGraphMap<&str, usize>, initial_node: &str) -> usize 
     return res;
 }
 
-fn create_graph(lines: &Vec<String>) -> DiGraphMap<&str, usize> {
+fn create_graph(lines: &[String]) -> DiGraphMap<&str, usize> {
     let re_outer = Regex::new(r"(.*) bags contain").unwrap();
     let re_inner = Regex::new(r"(\d+) (.*?) bags?").unwrap();
 

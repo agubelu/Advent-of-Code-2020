@@ -12,7 +12,7 @@ pub fn run() {
 
     let f = BufReader::new(File::open("../input/day10.txt").unwrap());
     let mut ls: Vec<u64> = f.lines().map(|l| l.unwrap().parse().unwrap()).collect();
-    ls.sort();
+    ls.sort_unstable();
     ls.insert(0, 0);
     
     let mut ones: u64 = 0;

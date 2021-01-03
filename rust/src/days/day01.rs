@@ -24,13 +24,11 @@ pub fn run() {
         map.insert(num, 1);
     }
 
-    vec.sort();
+    vec.sort_unstable();
         
     for i in 0..vec.len() {
         let e1 = vec[i];
-        for j in i+1..vec.len() {
-            let e2 = vec[j];
-
+        for e2 in &vec[i+1..] {
             if e1 + e2 == TARGET_SUM {
                 sol_part_1 = e1 * e2;
                 break;

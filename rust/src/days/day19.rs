@@ -52,7 +52,7 @@ fn read_input(f: BufReader<File>) -> (HashMap<RuleIndex, Rule>, Vec<String>) {
     let mut rules = HashMap::new();
     let mut line;
 
-    while {line = lines.next().unwrap().unwrap(); line != ""} {
+    while {line = lines.next().unwrap().unwrap(); !line.is_empty()} {
         let re = Regex::new(RE_RULE).unwrap();
         let (ind, rule) = read_rule(&line, &re);
         rules.insert(ind, rule);
@@ -62,20 +62,20 @@ fn read_input(f: BufReader<File>) -> (HashMap<RuleIndex, Rule>, Vec<String>) {
     return (rules, inputs);
 }
 
-fn read_rule(line: &String, re: &Regex) -> (RuleIndex, Rule) {
+fn read_rule(line: &str, re: &Regex) -> (RuleIndex, Rule) {
     let m = re.captures(&line).unwrap();
     let index: RuleIndex = m[1].parse().unwrap();
     let body = m.get(2).unwrap().as_str();
 
-    if body.starts_with("\"") {
+    if body.starts_with('"') {
         let val = String::from(&body[1..2]);
         return (index, Rule::Terminal{val});
     }
 
     let mut options: Vec<RuleCombo> = Vec::new();
-    for spl in body.split("|") {
+    for spl in body.split('|') {
         let mut combo: RuleCombo = Vec::new();
-        for ind in spl.trim().split(" ") {
+        for ind in spl.trim().split(' ') {
             combo.push(ind.parse().unwrap());
         }
         options.push(combo);

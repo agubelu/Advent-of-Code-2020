@@ -21,7 +21,7 @@ impl Field {
 
 struct Ticket { vals: Vec<IntType> }
 impl Ticket {
-    pub fn get_invalid_vals_sum(&self, fields: &Vec<Field>) -> Option<IntType> {
+    pub fn get_invalid_vals_sum(&self, fields: &[Field]) -> Option<IntType> {
         let filt: Vec<&IntType> = self.vals.iter().filter(|v| {
             fields.iter().all(|f| !f.accepts_value(**v))
         }).collect();
@@ -56,7 +56,7 @@ pub fn run() {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-fn get_sol_2(fields: &Vec<Field>, mapping: &Vec<u64>, my_ticket: &Ticket) -> u64 {
+fn get_sol_2(fields: &[Field], mapping: &[u64], my_ticket: &Ticket) -> u64 {
     my_ticket.vals.iter()
         .enumerate()
         .filter(|(i, _)| {
@@ -102,7 +102,7 @@ fn disambiguate_fields(fs: Vec<Vec<u64>>) -> Vec<u64> {
     return res;
 }
 
-fn ticket_to_fields(ticket: &Ticket, fields: &Vec<Field>) -> Vec<u64> {
+fn ticket_to_fields(ticket: &Ticket, fields: &[Field]) -> Vec<u64> {
     let n_fields = fields.len();
     ticket.vals.iter()
         .map(|val| {
@@ -118,7 +118,7 @@ fn ticket_to_fields(ticket: &Ticket, fields: &Vec<Field>) -> Vec<u64> {
         .collect()
 }
 
-fn filter_tickets(tickets: Vec<Ticket>, fields: &Vec<Field>) -> (Vec<Ticket>, IntType) {
+fn filter_tickets(tickets: Vec<Ticket>, fields: &[Field]) -> (Vec<Ticket>, IntType) {
     let mut sol_part_1 = 0;
     let mut valid_tickets = Vec::new();
 
@@ -141,7 +141,7 @@ fn process_input(f: BufReader<File>) -> (Vec<Field>, Ticket, Vec<Ticket>) {
     let mut line: String;
     let mut lines = f.lines();
 
-    while {line = lines.next().unwrap().unwrap(); line != ""} {
+    while {line = lines.next().unwrap().unwrap(); !line.is_empty() } {
         let field = line_to_field(&line);
         fields.push(field);
     }
@@ -152,7 +152,7 @@ fn process_input(f: BufReader<File>) -> (Vec<Field>, Ticket, Vec<Ticket>) {
 
     // Skip 2 and parse the other tickets
     lines.next(); lines.next();
-    while let Some(line) = lines.next() {
+    for line in lines {
         let line = line.unwrap();
         let ticket = line_to_ticket(&line);
         tickets.push(ticket);
@@ -162,7 +162,7 @@ fn process_input(f: BufReader<File>) -> (Vec<Field>, Ticket, Vec<Ticket>) {
 }
 
 // Annoying to code, but fast
-fn line_to_field(s: &String) -> Field {
+fn line_to_field(s: &str) -> Field {
     let mut chars = s.chars();
     let mut name = String::new();
     let mut ch: char;
@@ -192,14 +192,14 @@ fn line_to_field(s: &String) -> Field {
         rng2_start = rng2_start * 10 + ch.to_digit(10).unwrap();
     }
 
-    while let Some(ch) = chars.next() {
+    for ch in chars {
         rng2_end = rng2_end * 10 + ch.to_digit(10).unwrap();
     }
 
     return Field{name, range1: rng1_start..=rng1_end, range2: rng2_start..=rng2_end};
 }
 
-fn line_to_ticket(s: &String) -> Ticket {
+fn line_to_ticket(s: &str) -> Ticket {
     let vals: Vec<IntType> = s.split(',')
                               .map(|x| x.parse().unwrap())
                               .collect();

@@ -44,7 +44,7 @@ fn get_initial_numbers(mut f: BufReader<File>) -> (Vec<u32>, u32) {
     let _ = f.read_line(&mut s);
     let split: Vec<&str> = s.split(',').collect();
 
-    let mut res = vec![0 as u32; ITERS as usize];
+    let mut res = vec![0_u32; ITERS as usize];
 
     split.iter()
          .enumerate()

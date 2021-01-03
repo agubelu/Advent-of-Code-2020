@@ -1,6 +1,8 @@
 use std::io::{BufReader, BufRead};
 use std::fs::File;
 use std::time::Instant;
+use std::cmp::Ordering;
+
 /* use std::collections::HashSet;
  * read commented function below
  */
@@ -43,7 +45,7 @@ fn find_min_max(buf: &[u64]) -> (u64, u64) {
     return (min, max);
 }
 
-fn find_indices_range(ls: &Vec<u64>, target: u64) -> (usize, usize) {
+fn find_indices_range(ls: &[u64], target: u64) -> (usize, usize) {
     let n = ls.len();
 
     for i in 0..n {
@@ -51,17 +53,17 @@ fn find_indices_range(ls: &Vec<u64>, target: u64) -> (usize, usize) {
         for j in i+1..n {
             acc += ls[j];
 
-            if acc == target {
-                return (i, j);
-            } else if acc > target {
-                break;
-            }
+            match acc.cmp(&target) {
+                Ordering::Equal => return (i, j),
+                Ordering::Greater => break,
+                Ordering::Less => continue
+            };
         }
     }
     panic!("Not found");
 }
 
-fn find_first_not_valid(ls: &Vec<u64>) -> u64 {
+fn find_first_not_valid(ls: &[u64]) -> u64 {
     for i in BUFFER_SIZE..ls.len() {
         let target = ls[i];
         let buf = &ls[i-BUFFER_SIZE..i];

@@ -31,7 +31,7 @@ pub fn run() {
     let mut game1 = CombatGame::new(deck1.clone(), deck2.clone(), false);
     let sol_part_1 = game1.play_game(true).score.unwrap();
     
-    let mut game2 = CombatGame::new(deck1.clone(), deck2.clone(), true);
+    let mut game2 = CombatGame::new(deck1, deck2, true);
     let sol_part_2 = game2.play_game(true).score.unwrap();
 
     let elapsed_ms = time.elapsed().as_nanos() as f64 / 1_000_000.0;
@@ -80,9 +80,7 @@ impl CombatGame {
             let new_deck_1 = self.deck1[..card1].to_vec();
             let new_deck_2 = self.deck2[..card2].to_vec();
             CombatGame::new(new_deck_1, new_deck_2, true).play_game(false).winner
-        } else {
-            if card1 > card2 {1} else {2}
-        };
+        } else if card1 > card2 {1} else {2};
 
         if winner == 1 {
             self.deck1.push(card1);
@@ -118,13 +116,13 @@ fn read_decks(f: BufReader<File>) -> (Deck, Deck) {
 
     ls.next();
 
-    while {line = ls.next().unwrap().unwrap(); line != ""} {
+    while {line = ls.next().unwrap().unwrap(); !line.is_empty()} {
         deck1.push(line.parse().unwrap());
     }
 
     ls.next();
 
-    while let Some(line) = ls.next() {
+    for line in ls {
         deck2.push(line.unwrap().parse().unwrap());
     }
 

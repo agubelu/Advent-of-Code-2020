@@ -37,7 +37,7 @@ pub fn run() {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-fn chinese_rem_theorem(rems: &Vec<i64>, mods: &Vec<i64>) -> i64 {
+fn chinese_rem_theorem(rems: &[i64], mods: &[i64]) -> i64 {
     let prod: i64 = mods.iter().product();
     let prods_i: Vec<i64> = mods.iter().map(|x| prod / x).collect();
     let invs_i: Vec<i64> = izip!(&prods_i, mods).map(|(ni, m)| modinverse(*ni, *m).unwrap()).collect();
@@ -48,7 +48,7 @@ fn chinese_rem_theorem(rems: &Vec<i64>, mods: &Vec<i64>) -> i64 {
 fn process_input(f: BufReader<File>) -> (i64, Vec<i64>, Vec<i64>) {
     let lines: Vec<String> = f.lines().collect::<Result<_, _>>().unwrap();
     let tstamp = lines[0].parse().unwrap();
-    let spl: Vec<&str> = lines[1].split(",").collect(); 
+    let spl: Vec<&str> = lines[1].split(',').collect(); 
     let n_elems = spl.len();
 
     let mut buses = Vec::with_capacity(n_elems);

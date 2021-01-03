@@ -34,7 +34,7 @@ impl ExprToken {
 ///////////////////////////////////////////////////////////////////////////////
 
 // Simplified version of the Shunting-Yard algorithm
-pub fn line_to_expr(line: &String, op_priority: &HashMap<ExprToken, u8>) -> Expression {
+pub fn line_to_expr(line: &str, op_priority: &HashMap<ExprToken, u8>) -> Expression {
     let mut output_q: Expression = Vec::new();
     let mut operator_stack: Expression = Vec::new();
 
@@ -72,7 +72,7 @@ pub fn line_to_expr(line: &String, op_priority: &HashMap<ExprToken, u8>) -> Expr
     return output_q;
 }
 
-pub fn eval_expr(expr: &Expression) -> u64 {
+pub fn eval_expr(expr: &[ExprToken]) -> u64 {
     let mut stack = Vec::new();
 
     for token in expr {

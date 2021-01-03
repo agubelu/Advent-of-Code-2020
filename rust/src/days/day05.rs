@@ -25,7 +25,7 @@ pub fn run() {
         seats.push(sid);
     }
 
-    seats.sort();
+    seats.sort_unstable();
 
     let mut sol_part_2 = 0;
     let mut aux = 0;
@@ -45,7 +45,7 @@ pub fn run() {
     println!("Elapsed: {:.3} ms", elapsed_ms);
 }
 
-fn get_sid(code: &String) -> usize {
+fn get_sid(code: &str) -> usize {
     let bin: String = code.chars().map(|x| match x {
         'F' => '0',
         'L' => '0',
